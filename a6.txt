@@ -1,0 +1,79 @@
+Script started on 2022-12-12 00:32:32-05:00
+
+1.
+[guoman@sjsu A6]$ awk -F"\t" '($2 != $6) {print $0}' downloaded_tweets_extend_original_nolf2.tsv > downloaded_tweets_extend_original_nolf2_NOBOT.tsv
+[guoman@sjsu A6]$  
+[guoman@sjsu A6]$ awk -F'\t' '$6!=""' downloaded_tweets_extend_original_nolf2_NOBOT.tsv|cut -f 6 > downloaded_tweets_extend_original_nolf2_REPLIES.NOBOTS.tsv
+[guoman@sjsu A6]$ awk -F"\t" '($2 != $6) {print $0}' downloaded_tweets_extend_nolf2.tsv > downloaded_tweets_extend_nolf2_NOBOT.tsv
+[guoman@sjsu A6]$ 
+[guoman@sjsu A6]$ awk -F'\t' '$6!=""' downloaded_tweets_extend_nolf2_NOBOT.tsv|cut -f 6 >downloaded_tweets_extend_nolf2_REPLIES.NOBOTS.tsv
+[guoman@sjsu A6]$ cat downloaded_tweets_extend_nolf2_REPLIES.NOBOTS.tsv downloaded_tweets_extend_original_nolf2_REPLIES.NOBOTS.tsv|sort|uniq -c|sort -nr -k 1|awk '{ if ($1 >= 3) {print} }' > influential_user.txt
+[guoman@sjsu A6]$ cat influential_user.txt|wc -l
+515
+[guoman@sjsu A6]$ 
+
+
+2.
+
+[guoman@sjsu A6]$ for INFLUENSER in `cat influential_user.txt` ; do awk -v VAR=$INFLUENSER '($6 = VAR) {print $2} ' downloaded_tweets_extend_nolf2_REPLIES.NOBOTS.tsv;done >> reliess_to_infl.txt
+[guoman@sjsu A6]$ sort reliess_to_infl.txt |uniq|wc
+      71       71       1038
+[guoman@sjsu A6]$ 
+
+3.
+
+[guoman@sjsu A6]$ cat downloaded_tweets_extend_original_nolf2.tsv |grep replied_to|awk '{print $2}'|uniq > a6_3.txt
+[guoman@sjsu A6]$  
+[guoman@sjsu A6]$ cat influential_user.txt|awk '{print $2}'> text.txt
+[guoman@sjsu A6]$  
+[guoman@sjsu A6]$ fgrep -f reliess_to_infl.txt text.txt|wc
+    515     515    6425
+[guoman@sjsu A6]$ 
+
+
+
+4.
+[guoman@sjsu A6]$ fgrep -f  text.txt downloaded_tweets_extend_original_nolf2.tsv > date.tsv
+[guoman@sjsu A6]$ cat date.tsv|awk '{print $3}'| sort | uniq -c | sort -nr -k 1 | head
+    112 2022-02-26
+    104 2022-02-27
+     96 2022-03-02
+     84 2022-03-08
+     82 2022-03-06
+     81 2022-02-28
+     79 2022-03-19
+     73 2022-03-10
+     71 2022-04-19
+     71 2022-04-06
+
+
+5.
+[guoman@sjsu A6]$ cat downloaded_tweets_extend_original_nolf2.tsv |cut -f 8|tr -d , |tr -d '.'|tr -d ';'|sed 's/or//g'|sed 's/and//g'|sed 's/if//g'|sed 's/in//g'|sed 's/it//g'|sed 's/<[^>]*>//g' > a6_5.txt
+[guoman@sjsu A6]$ cat a6_5.txt|wordfrequency | head -10
+25158 
+24550 the
+17390 to
+16053 tco
+16045 https
+12239 of
+11239 a
+8274 is
+7628 s
+6960 f
+
+No.
+
+
+
+
+
+
+
+
+
+
+
+
+]0;guoman@sjsu:~/A6[guoman@sjsu A6]$ exit
+
+Script done on 2022-12-12 00:32:38-05:00
